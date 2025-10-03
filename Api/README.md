@@ -21,21 +21,21 @@
 ##### Banco
 - **POST** `/api/banco/register`  
   Registers a new `Banco` with the following properties:
-  - `BancoId` (Required)  
-  - `BancoName` (Required)  
-  - `BancoCode` (Required)  
+  - `Id` (Required)  
+  - `Name` (Required)  
+  - `Code` (Required)  
   - `InterestPercent` (Required)  
 
 - **GET** `/api/banco/all`  
   Returns all `Banco` entries.  
 
-- **GET** `/api/banco/{BancoCode}`  
-  Returns one `Banco` entry by its `BancoCode`.  
+- **GET** `/api/banco/{Code}`  
+  Returns one `Banco` entry by its `Code`.  
 
 ##### Boleto
 - **POST** `/api/boleto/register`  
   Registers a new `Boleto` with the following properties:
-  - `BoletoId` (Required)  
+  - `Id` (Required)  
   - `PayorName` (Required)  
   - `PayorCPF_CNPJ`  
   - `PayeeName` (Required)  
@@ -44,8 +44,8 @@
   - `Notes`  
   - `BancoId` (Required / references Banco register)  
 
-- **GET** `/api/boleto/{BoletoId}?searchDate=yyyy-MM-dd`  
-  Returns a `Boleto` by its `BoletoId`.  
+- **GET** `/api/boleto/{Id}?searchDate=yyyy-MM-dd`  
+  Returns a `Boleto` by its `Id`.  
   - Condition: If the `searchDate` is after the `DueDate`, apply the related `Banco.InterestPercent` **once** to the `Amount`.  
   - Interest is not accumulated per day, only added once.  
 
