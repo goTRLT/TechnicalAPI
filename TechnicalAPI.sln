@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36518.9 d17.14
+VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{CC436696-A8BE-44C2-80CC-C1EC33BFF046}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9058183F-11D9-470B-A429-4236B55B09DF} = {9058183F-11D9-470B-A429-4236B55B09DF}
+		{BED73B27-1A46-443E-9317-8EA97832CA1E} = {BED73B27-1A46-443E-9317-8EA97832CA1E}
+		{E5EE0386-9737-4CEA-8456-ED03E3C4A087} = {E5EE0386-9737-4CEA-8456-ED03E3C4A087}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{9058183F-11D9-470B-A429-4236B55B09DF}"
 EndProject
