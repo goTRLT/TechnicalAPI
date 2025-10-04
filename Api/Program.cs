@@ -1,28 +1,21 @@
+using Api;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("TechDb");
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services
-    .AddEntityFrameworkNpgsql()
-    .AddDbContext<ApiDbContext>(options => options
-    .UseNpgsql(builder.Configuration.GetConnectionString("DbConStr")));
+builder.Services.AddServices(connectionString);
 
 var app = builder.Build();
 
-app.MapGet("/bancos", async (ApiDbContext context) =>
+app.MapGet("/bancos", async (TechDbContext context) =>
 {
     return await context.Bancos.ToListAsync();
 });
 
-app.MapGet("/boletos", async (ApiDbContext context) =>
+app.MapGet("/boletos", async (TechDbContext context) =>
 {
     return await context.Boletos.ToListAsync();
 });
