@@ -11,17 +11,17 @@ namespace Infrastructure.Configurations
 {
     public class BoletoConfig : IEntityTypeConfiguration<Boleto>
     {
-        public void Configure(EntityTypeBuilder<Boleto> ba)
+        public void Configure(EntityTypeBuilder<Boleto> bo)
         {
-            ba.ToTable("Boletos");
-            ba.HasKey(x => x.Id);
-            ba.Property(x => x.PayorName).IsRequired().HasMaxLength(50);
-            ba.Property(x => x.PayorCPF_CNPJ).HasMaxLength(14);
-            ba.Property(x => x.PayeeName).IsRequired().HasMaxLength(50);
-            ba.Property(x => x.Amount).IsRequired();
-            ba.Property(x => x.DueDate).IsRequired().HasMaxLength(50);
-            ba.Property(x => x.Notes).HasMaxLength(50);
-            ba.Property(x => x.BancoId).IsRequired().HasMaxLength(50);
+            bo.ToTable("Boletos");
+            bo.HasKey(x => x.Id);
+            bo.Property(x => x.PayorName).IsRequired().HasMaxLength(50);
+            bo.Property(x => x.PayorCPF_CNPJ).HasMaxLength(14);
+            bo.Property(x => x.PayeeName).IsRequired().HasMaxLength(50);
+            bo.Property(x => x.Amount).IsRequired();
+            bo.Property(x => x.DueDate).IsRequired().HasMaxLength(50);
+            bo.Property(x => x.Notes).HasMaxLength(50);
+            bo.Property(x => x.BancoId).IsRequired().HasMaxLength(50);
         }
     }
 }
