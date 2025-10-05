@@ -35,7 +35,7 @@ namespace Infrastructure.Repositories
 
             var records = _context.SaveChanges();
 
-            return records > 1;
+            return records > 0;
         }
     }
 }
