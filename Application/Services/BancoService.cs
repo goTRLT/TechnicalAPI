@@ -18,7 +18,7 @@ namespace Application.Services
 
         public BancoService(IBancoRepository bancoRepository, IMapper mapper)
         {
-            bancoRepository = bancoRepository;
+            _bancoRepository = bancoRepository;
             _mapper = mapper;
         }
 
