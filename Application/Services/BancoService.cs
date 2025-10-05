@@ -1,4 +1,6 @@
 ﻿using Application.Interfaces;
+using AutoMapper;
+using Domain.DTOs;
 using Domain.Entity;
 using Domain.Interfaces;
 using System;
@@ -11,19 +13,37 @@ namespace Application.Services
 {
     public class BancoService : IBancoService
     {
-        public Task<List<Banco>> FindAll()
+        private readonly IBancoRepository _bancoRepository;
+        private readonly IMapper _mapper;
+
+        public BancoService(IBancoRepository bancoRepository, IMapper mapper)
         {
-            throw new NotImplementedException();
+            bancoRepository = bancoRepository;
+            _mapper = mapper;
         }
 
-        public Task<Banco> Find(int code)
+        public async Task<List<BancoDto>> FindAll()
         {
-            throw new NotImplementedException();
+            var all = new List<BancoDto>();
+            var bancos = await _bancoRepository.FindAll();
+            foreach (var banco in bancos)
+            {
+                all.Add(_mapper.Map<BancoDto>(banco));
+            }
+            return all;
         }
 
-        public Task<bool> Create(Banco banco)
+        public async Task<BancoDto> Find(int code)
         {
-            throw new NotImplementedException();
+            var banco = await _bancoRepository.Find(code);
+            return _mapper.Map<BancoDto>(banco);
+        }
+
+        public async Task<bool> Create(BancoDto bancoDto)
+        {
+            var bancoMap = _mapper.Map<Banco>(bancoDto);
+            var success = await _bancoRepository.Create(bancoMap);
+            return success;
         }
     }
 }
