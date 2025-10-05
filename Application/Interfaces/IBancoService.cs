@@ -1,4 +1,5 @@
-﻿using Domain.Entity;
+﻿using Domain.DTOs;
+using Domain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,8 @@ namespace Application.Interfaces
 {
     public interface IBancoService
     {
-        Task<List<Banco>> FindAll();
-        Task<Banco> Find(int code);
-        Task<bool> Create(Banco banco);
+        Task<List<BancoDto>> FindAll();
+        Task<BancoDto> Find(int code);
+        Task<bool> Create(BancoDto bancoDto);
     }
 }
