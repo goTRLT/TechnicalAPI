@@ -1,4 +1,5 @@
-﻿using Domain.Entity;
+﻿using Domain.DTOs;
+using Domain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Application.Interfaces
 {
     public interface IBoletoService
     {
-        Task<Boleto> Find(int id);
-        Task<bool> Create(Boleto banco);
+        Task<BoletoDto> Find(int id);
+        Task<bool> Create(BoletoDto bancoDto);
     }
 }
