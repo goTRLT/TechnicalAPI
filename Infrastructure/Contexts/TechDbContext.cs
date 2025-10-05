@@ -10,6 +10,10 @@ namespace Infrastructure.Context
 {
     public class TechDbContext : DbContext
     {
+        public TechDbContext(DbContextOptions<TechDbContext> options) : base(options)
+        {
+        }
+
         public DbSet<Banco> Bancos => Set<Banco>();
         public DbSet<Boleto> Boletos => Set<Boleto>();
 
