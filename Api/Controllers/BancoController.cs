@@ -45,12 +45,10 @@ namespace Api.Controllers
         [HttpGet("{code}")]
         public async Task<ActionResult<BancoDto>> Get(int code)
             {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var banco = await _bancoService.FindByCode(code);
             if (banco == null)
-                return NotFound();
+                return NotFound($"Banco with code {code} not found.");
+
             return Ok(banco);
             }
 
@@ -64,6 +62,10 @@ namespace Api.Controllers
             {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var existingBanco = await _bancoService.FindByCode(bancoDto.Code);
+            if (existingBanco != null)
+                return BadRequest($"Banco with code {bancoDto.Code} already exists.");
 
             var success = await _bancoService.Create(bancoDto);
             if (!success)
