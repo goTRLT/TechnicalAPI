@@ -1,72 +1,23 @@
 # TechnicalAPI
+---
+This project is a Technical challenge proposed for a job opening.
+It consists in following a ruleset given by the organization to build a API that Registers and Finds "Banco" and "Boleto" entities on a PostgreSQL database.
 
 ---
-
-## Rules
-
+## Index
+````````
+- Sample Requests
+-- Banco
+-- Boleto
+- Rules
+-- Tech Stack
+-- Banco Endpoints
+-- Boleto Endpoints
+-- Validation
+-- Optional Features
+````````
 ---
-
-### Tech Stack
-- **.NET 6**
-- **Entity Framework Core**
-- **PostgreSQL**
-- **Swagger**
-
----
-
-### Features
-
-#### Endpoints
-
-##### Banco
-- **POST** `/api/banco/register`  
-  Registers a new `Banco` with the following properties:
-  - `Id` (Required)  
-  - `Name` (Required)  
-  - `Code` (Required)  
-  - `InterestPercent` (Required)  
-
-- **GET** `/api/banco/all`  
-  Returns all `Banco` entries.  
-
-- **GET** `/api/banco/{Code}`  
-  Returns one `Banco` entry by its `Code`.  
-
-##### Boleto
-- **POST** `/api/boleto/register`  
-  Registers a new `Boleto` with the following properties:
-  - `Id` (Required)  
-  - `PayorName` (Required)  
-  - `PayorCpfCnpj`  
-  - `PayeeName` (Required)  
-  - `Amount` (Required)  
-  - `DueDate` (Required)  
-  - `Notes`  
-  - `BancoId` (Required / references Banco register)  
-
-- **GET** `/api/boleto/{Id}?searchDate=yyyy-MM-dd`  
-  Returns a `Boleto` by its `Id`.  
-  - Condition: If the current date is later the `DueDate`, apply the related `Banco.InterestPercent` **once** to the `Amount`.  
-  - Interest is not accumulated per day, only added once.  
-
----
-
-### Validation
-- All **Required** fields must be validated.
-
----
-
-### Optional Features
-- Tokens
-- DTOs
-- AutoMapper
-- Layer Separation
-
----
-
 ## Sample Requests
-
----
 
 ### Banco
 
@@ -181,4 +132,66 @@ _id: int32_
   "notes": "string",
   "bancoId": 0
 }
+````````
+
+---
+## Rules
+
+---
+### Tech Stack
+````````
+- .NET 6
+- Entity Framework Core
+- PostgreSQL
+- Swagger
+````````
+
+---
+### Features
+
+#### Endpoints
+
+##### Banco
+- **POST** `/api/banco/register`  
+  Registers a new `Banco` with the following properties:
+  - `Id` (Required)  
+  - `Name` (Required)  
+  - `Code` (Required)  
+  - `InterestPercent` (Required)  
+
+- **GET** `/api/banco/all`  
+  Returns all `Banco` entries.  
+
+- **GET** `/api/banco/{Code}`  
+  Returns one `Banco` entry by its `Code`.  
+
+##### Boleto
+- **POST** `/api/boleto/register`  
+  Registers a new `Boleto` with the following properties:
+  - `Id` (Required)  
+  - `PayorName` (Required)  
+  - `PayorCpfCnpj`  
+  - `PayeeName` (Required)  
+  - `Amount` (Required)  
+  - `DueDate` (Required)  
+  - `Notes`  
+  - `BancoId` (Required / references Banco register)  
+
+- **GET** `/api/boleto/{Id}?searchDate=yyyy-MM-dd`  
+  Returns a `Boleto` by its `Id`.  
+  - Condition: If the current date is later the `DueDate`, apply the related `Banco.InterestPercent` **once** to the `Amount`.  
+  - Interest is not accumulated per day, only added once.  
+
+---
+### Validation
+````````
+- All **Required** fields must be validated.
+````````
+---
+### Optional Features
+````````
+- Tokens
+- DTOs
+- AutoMapper
+- Layer Separation
 ````````
