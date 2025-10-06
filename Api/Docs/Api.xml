@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Api</name>
+    </assembly>
+    <members>
+        <member name="T:Api.Controllers.BancoController">
+            <summary>
+            Controller that manages Bancos.
+            Provides endpoints to register, retrieve all, and retrieve by code.
+            </summary>
+        </member>
+        <member name="M:Api.Controllers.BancoController.#ctor(Application.Interfaces.IBancoService)">
+            <summary>
+            Initializes a new <see cref="T:Api.Controllers.BancoController"/> class.
+            </summary>
+            <param name="bancoService">Service for Banco operations.</param>
+        </member>
+        <member name="M:Api.Controllers.BancoController.GetAll">
+            <summary>
+            Get all Bancos.
+            </summary>
+            <returns>List of BancoDto objects.</returns>
+        </member>
+        <member name="M:Api.Controllers.BancoController.Get(System.Int32)">
+            <summary>
+            Get one Banco by the Banco code.
+            </summary>
+            <param name="code">The code of the Banco.</param>
+            <returns>The BancoDto object if found; otherwise, NotFound.</returns>
+        </member>
+        <member name="M:Api.Controllers.BancoController.Register(Domain.DTOs.BancoDto)">
+            <summary>
+            Registers a new Banco.
+            </summary>
+            <param name="bancoDto">The BancoDto to register.</param>
+            <returns>Created result if successful; otherwise, BadRequest.</returns>
+        </member>
+        <member name="T:Api.Controllers.BoletoController">
+            <summary>
+            Controller that manages Boletos.
+            Provides endpoints to register and get by Id.
+            </summary>
+        </member>
+        <member name="M:Api.Controllers.BoletoController.#ctor(Application.Interfaces.IBoletoService,Application.Interfaces.IBancoService)">
+            <summary>
+            Initializes a new <see cref="T:Api.Controllers.BoletoController"/> class.
+            </summary>
+            <param name="boletoService">Service for Boleto operations.</param>
+            <param name="bancoService">Service for Banco operations.</param>
+        </member>
+        <member name="M:Api.Controllers.BoletoController.Get(System.Int32)">
+            <summary>
+            Get a Boleto by the Boleto Id.
+            Applies interest if DueDate is past the search date.
+            </summary>
+            <param name="id">The Boleto Id.</param>
+            <returns>The BoletoDto object if found; otherwise, NotFound.</returns>
+        </member>
+        <member name="M:Api.Controllers.BoletoController.Register(Domain.DTOs.BoletoDto)">
+            <summary>
+            Registers a new Boleto.
+            </summary>
+            <param name="boletoDto">The BoletoDto to register.</param>
+            <returns>Created result if successful; otherwise, BadRequest.</returns>
+        </member>
+    </members>
+</doc>
