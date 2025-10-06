@@ -1,83 +1,93 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Application.Interfaces;
+using Domain.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
-{
-    public class BoletoController : Controller
     {
-        // GET: BoletoController
-        public ActionResult Index()
+    /// <summary>
+    /// Controller that manages Boletos.
+    /// Provides endpoints to register and get by Id.
+    /// </summary>
+    [ApiController]
+    [Route("api/boletos")]
+    public class BoletoController : ControllerBase
         {
-            return View();
-        }
+        private readonly IBoletoService _boletoService;
+        private readonly IBancoService _bancoService;
 
-        // GET: BoletoController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: BoletoController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: BoletoController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
+        /// <summary>
+        /// Initializes a new <see cref="BoletoController"/> class.
+        /// </summary>
+        /// <param name="boletoService">Service for Boleto operations.</param>
+        /// <param name="bancoService">Service for Banco operations.</param>
+        public BoletoController(IBoletoService boletoService, IBancoService bancoService)
             {
-                return RedirectToAction(nameof(Index));
+            _boletoService = boletoService;
+            _bancoService = bancoService;
             }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: BoletoController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+        /// <summary>
+        /// Get a Boleto by the Boleto Id.
+        /// Applies interest if DueDate is past the search date.
+        /// </summary>
+        /// <param name="id">The Boleto Id.</param>
+        /// <returns>The BoletoDto object if found; otherwise, NotFound.</returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<BoletoDto>> Get(int id)
+            {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        // POST: BoletoController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            var boleto = await _boletoService.Find(id);
+            if (boleto == null)
+                return NotFound();
 
-        // GET: BoletoController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+            if (DateTime.UtcNow.Date > boleto.DueDate.Date)
+                {
+                var banco = await _bancoService.FindById(boleto.BancoId);
+                if (banco != null)
+                    boleto.Amount = boleto.Amount + (boleto.Amount * (banco.InterestPercent / 100));
+                }
 
-        // POST: BoletoController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+            return Ok(boleto);
             }
-            catch
+
+        /// <summary>
+        /// Registers a new Boleto.
+        /// </summary>
+        /// <param name="boletoDto">The BoletoDto to register.</param>
+        /// <returns>Created result if successful; otherwise, BadRequest.</returns>
+        [HttpPost("register")]
+        public async Task<ActionResult> Register([FromBody] BoletoDto boletoDto)
             {
-                return View();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (boletoDto.PayorName.ToLower() == boletoDto.PayeeName.ToLower())
+                return BadRequest("Payor and Payee cannot be the same.");
+
+            string? sanitizedCpfCnpj = boletoDto.PayorCpfCnpj == null ? null : new string(boletoDto.PayorCpfCnpj.Where(char.IsDigit).ToArray());
+
+            var payorDocs = await _boletoService.FindPayorDocs(boletoDto.PayorCpfCnpj, boletoDto.PayorName);
+
+            if (payorDocs != null)
+                {
+                string? payorDocsCpfCnpj = payorDocs.PayorCpfCnpj == null
+                    ? null
+                    : new string(payorDocs.PayorCpfCnpj.Where(char.IsDigit).ToArray());
+
+                string? inputCpfCnpj = sanitizedCpfCnpj;
+
+                if ((payorDocsCpfCnpj == inputCpfCnpj && payorDocs.PayorName != boletoDto.PayorName) ||
+                    (payorDocsCpfCnpj != inputCpfCnpj && payorDocs.PayorName == boletoDto.PayorName))
+                    return BadRequest("CPF and CPNJ documents are unique to a single Payor.");
+                }
+
+            var success = await _boletoService.Create(boletoDto);
+            if (!success)
+                return BadRequest("Could not create Boleto.");
+
+            return CreatedAtAction(nameof(Get), new { id = boletoDto.Id }, boletoDto);
             }
         }
     }
-}
