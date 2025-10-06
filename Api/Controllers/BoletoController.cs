@@ -39,8 +39,8 @@ namespace Api.Controllers
                 return BadRequest(ModelState);
 
             var boleto = await _boletoService.Find(id);
-            if (boleto == null)
-                return NotFound();
+            if (boleto.Id == 0)
+                return NotFound($"Boleto with id {id} not found.");
 
             if (DateTime.UtcNow.Date > boleto.DueDate.Date)
                 {
@@ -66,6 +66,10 @@ namespace Api.Controllers
             if (boletoDto.PayorName.ToLower() == boletoDto.PayeeName.ToLower())
                 return BadRequest("Payor and Payee cannot be the same.");
 
+            var banco = await _bancoService.FindById(boletoDto.BancoId);
+            if (banco == null)
+                return BadRequest($"Banco with id {boletoDto.BancoId} does not exist.");
+
             string? sanitizedCpfCnpj = boletoDto.PayorCpfCnpj == null ? null : new string(boletoDto.PayorCpfCnpj.Where(char.IsDigit).ToArray());
 
             var payorDocs = await _boletoService.FindPayorDocs(boletoDto.PayorCpfCnpj, boletoDto.PayorName);
@@ -83,11 +87,11 @@ namespace Api.Controllers
                     return BadRequest("CPF and CPNJ documents are unique to a single Payor.");
                 }
 
-            var success = await _boletoService.Create(boletoDto);
-            if (!success)
+            var createdBoleto = await _boletoService.CreateAndReturn(boletoDto);
+            if (createdBoleto == null)
                 return BadRequest("Could not create Boleto.");
 
-            return CreatedAtAction(nameof(Get), new { id = boletoDto.Id }, boletoDto);
+            return CreatedAtAction(nameof(Get), new { id = createdBoleto.Id }, createdBoleto);
             }
         }
     }
