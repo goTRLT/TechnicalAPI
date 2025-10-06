@@ -5,15 +5,14 @@ using Infrastructure.Context;
 using Infrastructure.Mappings;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using System.Reflection;
 
 namespace Api.Extensions
-    {
+{
     public static class Service
-        {
+    {
         public static void AddServices(this WebApplicationBuilder builder)
-            {
+        {
             var connectionString = builder.Configuration.GetConnectionString("TechDb");
 
             builder.Services.AddControllers();
@@ -24,22 +23,22 @@ namespace Api.Extensions
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 if (File.Exists(xmlPath))
-                    {
+                {
                     options.IncludeXmlComments(xmlPath);
-                    }
+                }
 
                 // Add metadata
                 options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-                    {
+                {
                     Title = "TechnicalAPI",
                     Version = "v0.6",
                     Description = "API for Banco and Boleto management.",
                     Contact = new Microsoft.OpenApi.Models.OpenApiContact
-                        {
+                    {
                         Name = "Thuan Rael Lombardi",
                         Email = "thuanraellombardi@gmail.com"
-                        }
-                    });
+                    }
+                });
             });
 
             builder.Services
@@ -53,6 +52,6 @@ namespace Api.Extensions
             builder.Services.AddScoped<IBoletoRepository, BoletoRepository>();
 
             builder.Services.AddAutoMapper(map => map.AddProfile(new MapProfile()));
-            }
         }
     }
+}

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace Domain.DTOs
-    {
+{
     public class BancoDto
-        {
+    {
         [Key]
         public int Id { get; set; }
 
@@ -16,5 +16,5 @@ namespace Domain.DTOs
 
         [Required(ErrorMessage = "InterestPercent is required.")]
         public decimal InterestPercent { get; set; }
-        }
     }
+}

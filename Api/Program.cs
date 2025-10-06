@@ -1,7 +1,4 @@
-using Api;
 using Api.Extensions;
-using Infrastructure.Context;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 

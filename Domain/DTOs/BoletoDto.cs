@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace Domain.DTOs
-    {
+{
     public class BoletoDto
-        {
+    {
         [Key]
         public int Id { get; set; }
 
@@ -29,5 +29,5 @@ namespace Domain.DTOs
 
         [Required(ErrorMessage = "BancoId is required.")]
         public int BancoId { get; set; }
-        }
     }
+}
