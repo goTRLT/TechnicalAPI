@@ -1,17 +1,12 @@
 ﻿using Domain.DTOs;
-using Domain.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Interfaces
-{
-    public interface IBancoService
     {
+    public interface IBancoService
+        {
         Task<List<BancoDto>> FindAll();
-        Task<BancoDto> Find(int code);
+        Task<BancoDto> FindByCode(int code);
+        Task<BancoDto> FindById(int id);
         Task<bool> Create(BancoDto bancoDto);
+        }
     }
-}
