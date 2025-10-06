@@ -3,7 +3,7 @@ using Domain.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
-    {
+{
     /// <summary>
     /// Controller that manages Boletos.
     /// Provides endpoints to register and get by Id.
@@ -11,7 +11,7 @@ namespace Api.Controllers
     [ApiController]
     [Route("api/boletos")]
     public class BoletoController : ControllerBase
-        {
+    {
         private readonly IBoletoService _boletoService;
         private readonly IBancoService _bancoService;
 
@@ -21,10 +21,10 @@ namespace Api.Controllers
         /// <param name="boletoService">Service for Boleto operations.</param>
         /// <param name="bancoService">Service for Banco operations.</param>
         public BoletoController(IBoletoService boletoService, IBancoService bancoService)
-            {
+        {
             _boletoService = boletoService;
             _bancoService = bancoService;
-            }
+        }
 
         /// <summary>
         /// Get a Boleto by the Boleto Id.
@@ -34,7 +34,7 @@ namespace Api.Controllers
         /// <returns>The BoletoDto object if found; otherwise, NotFound.</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<BoletoDto>> Get(int id)
-            {
+        {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -43,14 +43,14 @@ namespace Api.Controllers
                 return NotFound($"Boleto with id {id} not found.");
 
             if (DateTime.UtcNow.Date > boleto.DueDate.Date)
-                {
+            {
                 var banco = await _bancoService.FindById(boleto.BancoId);
                 if (banco != null)
                     boleto.Amount = boleto.Amount + (boleto.Amount * (banco.InterestPercent / 100));
-                }
+            }
 
             return Ok(boleto);
-            }
+        }
 
         /// <summary>
         /// Registers a new Boleto.
@@ -59,7 +59,7 @@ namespace Api.Controllers
         /// <returns>Created result if successful; otherwise, BadRequest.</returns>
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] BoletoDto boletoDto)
-            {
+        {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -75,7 +75,7 @@ namespace Api.Controllers
             var payorDocs = await _boletoService.FindPayorDocs(boletoDto.PayorCpfCnpj, boletoDto.PayorName);
 
             if (payorDocs != null)
-                {
+            {
                 string? payorDocsCpfCnpj = payorDocs.PayorCpfCnpj == null
                     ? null
                     : new string(payorDocs.PayorCpfCnpj.Where(char.IsDigit).ToArray());
@@ -85,13 +85,13 @@ namespace Api.Controllers
                 if ((payorDocsCpfCnpj == inputCpfCnpj && payorDocs.PayorName != boletoDto.PayorName) ||
                     (payorDocsCpfCnpj != inputCpfCnpj && payorDocs.PayorName == boletoDto.PayorName))
                     return BadRequest("CPF and CPNJ documents are unique to a single Payor.");
-                }
+            }
 
             var createdBoleto = await _boletoService.CreateAndReturn(boletoDto);
             if (createdBoleto == null)
                 return BadRequest("Could not create Boleto.");
 
             return CreatedAtAction(nameof(Get), new { id = createdBoleto.Id }, createdBoleto);
-            }
         }
     }
+}
