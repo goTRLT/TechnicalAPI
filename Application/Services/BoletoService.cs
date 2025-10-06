@@ -37,6 +37,16 @@ namespace Application.Services
             var boleto = await _boletoRepository.FindPayorDocs(cpfCnpj, payorName);
             return boleto == null ? null : _mapper.Map<BoletoDto>(boleto);
             }
+
+        public async Task<BoletoDto?> CreateAndReturn(BoletoDto boletoDto)
+            {
+            var boletoMap = _mapper.Map<Boleto>(boletoDto);
+            var success = await _boletoRepository.Create(boletoMap);
+            if (!success)
+                return null;
+
+            return _mapper.Map<BoletoDto>(boletoMap);
+            }
         }
     }
 
