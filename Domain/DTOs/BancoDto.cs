@@ -1,20 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace Domain.DTOs
-{
-    public class BancoDto
     {
+    public class BancoDto
+        {
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Name is required.")]
         [MaxLength(50)]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Code is required.")]
         public int Code { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "InterestPercent is required.")]
         public decimal InterestPercent { get; set; }
+        }
     }
-}
