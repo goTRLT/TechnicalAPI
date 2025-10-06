@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Entity
 {
     public class Boleto
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
@@ -18,17 +14,17 @@ namespace Domain.Entity
         public string PayorName { get; set; }
 
         [MaxLength(14)]
-        public int? PayorCPF_CNPJ { get; set; }
+        public string? PayorCpfCnpj { get; set; }
 
         [Required]
         [MaxLength(50)]
         public string PayeeName { get; set; }
 
         [Required]
-        public int Amount { get; set; }
+        public decimal Amount { get; set; }
 
         [Required]
-        public DateOnly DueDate { get; set; }
+        public DateTime DueDate { get; set; }
 
         [MaxLength(50)]
         public string? Notes { get; set; }
@@ -36,7 +32,5 @@ namespace Domain.Entity
         [Required]
         [ForeignKey("Banco")]
         public int BancoId { get; set; }
-
-        public Banco Banco { get; set; }
     }
 }
