@@ -37,7 +37,7 @@
   Registers a new `Boleto` with the following properties:
   - `Id` (Required)  
   - `PayorName` (Required)  
-  - `PayorCPF_CNPJ`  
+  - `PayorCpfCnpj`  
   - `PayeeName` (Required)  
   - `Amount` (Required)  
   - `DueDate` (Required)  
@@ -46,7 +46,7 @@
 
 - **GET** `/api/boleto/{Id}?searchDate=yyyy-MM-dd`  
   Returns a `Boleto` by its `Id`.  
-  - Condition: If the `searchDate` is after the `DueDate`, apply the related `Banco.InterestPercent` **once** to the `Amount`.  
+  - Condition: If the current date is later the `DueDate`, apply the related `Banco.InterestPercent` **once** to the `Amount`.  
   - Interest is not accumulated per day, only added once.  
 
 ---
@@ -61,3 +61,124 @@
 - DTOs
 - AutoMapper
 - Layer Separation
+
+---
+
+## Sample Requests
+
+---
+
+### Banco
+
+#### Get all Bancos
+
+**GET** `/api/bancos/all`
+
+#### Request
+_No request body required._
+
+#### Response
+````````
+[
+  {
+    "id": 0,
+    "name": "string",
+    "code": 0,
+    "interestPercent": 0
+  }
+]
+````````
+
+#### Get Banco by Code
+
+**GET** `/api/bancos/{code}`
+
+#### Parameters
+_code: int32_
+
+#### Response
+````````
+{
+  "Id": 1,
+  "Name": "Banco Exemplo",
+  "Code": "BE",
+  "InterestPercent": 2.5
+}
+````````
+
+#### Register a new Banco
+
+**POST** `/api/bancos/register`
+
+#### Request
+````````
+{
+  "name": "string",
+  "code": 0,
+  "interestPercent": 0
+}
+````````
+
+#### Response
+````````
+{
+  "id": 0,
+  "name": "string",
+  "code": 0,
+  "interestPercent": 0
+}
+````````
+
+### Boleto
+
+#### Get Boleto by Id
+
+**GET** `/api/boletos/{id}`
+
+#### Parameters
+_id: int32_
+
+#### Response
+````````
+{
+  "id": 0,
+  "payorName": "string",
+  "payorCpfCnpj": "string",
+  "payeeName": "string",
+  "amount": 0,
+  "dueDate": "2025-10-06T07:20:39.875Z",
+  "notes": "string",
+  "bancoId": 0
+}
+````````
+
+#### Register a new Boleto
+
+**POST** `/api/boletos/register`
+
+**Request Body**
+````````
+{
+  "payorName": "string",
+  "payorCpfCnpj": "string",
+  "payeeName": "string",
+  "amount": 0,
+  "dueDate": "2025-10-06T07:22:37.289Z",
+  "notes": "string",
+  "bancoId": 0
+}
+````````
+
+#### Response
+````````
+{
+  "id": 0,
+  "payorName": "string",
+  "payorCpfCnpj": "string",
+  "payeeName": "string",
+  "amount": 0,
+  "dueDate": "2025-10-06T07:22:37.289Z",
+  "notes": "string",
+  "bancoId": 0
+}
+````````
