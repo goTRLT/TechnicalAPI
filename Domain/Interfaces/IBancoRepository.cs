@@ -1,12 +1,12 @@
 ﻿using Domain.Entity;
 
 namespace Domain.Interfaces
-{
-    public interface IBancoRepository
     {
+    public interface IBancoRepository
+        {
         Task<List<Banco>> FindAll();
         Task<Banco> FindByCode(int code);
-        Task<Banco> FindById(int id); // Add this
+        Task<Banco> FindById(int id);
         Task<bool> Create(Banco banco);
+        }
     }
-}
