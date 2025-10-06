@@ -1,83 +1,75 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Application.Interfaces;
+using Domain.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
-{
-    public class BancoController : Controller
     {
-        // GET: BancoController
-        public ActionResult Index()
+    /// <summary>
+    /// Controller that manages Bancos.
+    /// Provides endpoints to register, retrieve all, and retrieve by code.
+    /// </summary>
+    [ApiController]
+    [Route("api/bancos")]
+    public class BancoController : ControllerBase
         {
-            return View();
-        }
+        private readonly IBancoService _bancoService;
 
-        // GET: BancoController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: BancoController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: BancoController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
+        /// <summary>
+        /// Initializes a new <see cref="BancoController"/> class.
+        /// </summary>
+        /// <param name="bancoService">Service for Banco operations.</param>
+        public BancoController(IBancoService bancoService)
             {
-                return RedirectToAction(nameof(Index));
+            _bancoService = bancoService;
             }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: BancoController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+        /// <summary>
+        /// Get all Bancos.
+        /// </summary>
+        /// <returns>List of BancoDto objects.</returns>
+        [HttpGet("all")]
+        public async Task<ActionResult<List<BancoDto>>> GetAll()
+            {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        // POST: BancoController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+            var bancos = await _bancoService.FindAll();
+            return Ok(bancos);
             }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: BancoController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+        /// <summary>
+        /// Get one Banco by the Banco code.
+        /// </summary>
+        /// <param name="code">The code of the Banco.</param>
+        /// <returns>The BancoDto object if found; otherwise, NotFound.</returns>
+        [HttpGet("{code}")]
+        public async Task<ActionResult<BancoDto>> Get(int code)
+            {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        // POST: BancoController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+            var banco = await _bancoService.FindByCode(code);
+            if (banco == null)
+                return NotFound();
+            return Ok(banco);
             }
-            catch
+
+        /// <summary>
+        /// Registers a new Banco.
+        /// </summary>
+        /// <param name="bancoDto">The BancoDto to register.</param>
+        /// <returns>Created result if successful; otherwise, BadRequest.</returns>
+        [HttpPost("register")]
+        public async Task<ActionResult> Register([FromBody] BancoDto bancoDto)
             {
-                return View();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var success = await _bancoService.Create(bancoDto);
+            if (!success)
+                return BadRequest("Could not create Banco.");
+
+            return CreatedAtAction(nameof(Get), new { code = bancoDto.Code }, bancoDto);
             }
         }
     }
-}
